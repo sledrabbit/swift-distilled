@@ -483,7 +483,7 @@ Functions don't need parameters or return values.
 
 ```swift
 func basic() {
-  	print("Much basic")
+    print("Much basic")
 }
 basic() // "Much basic"
 ```
