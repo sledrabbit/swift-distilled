@@ -19,18 +19,46 @@ For those that use and enjoy Swift, know that Swift is more than up to the task.
 > [!Important]
 > There are four things to keep in mind when using Swift. Check each relevant section of this guide for further information and examples.
 >
-> 1. Strings
->     * They are encoded in Unicode and integer subscripting is not available
->     * Easy workaround is to convert strings with `Array(nameOfString)`
-> 2. Stack / Queue
->     * Array can be used as a stack for O(1) insert and removal
->     * Removing elements from the front of an array is O(n)
->     * If the time complexity of queue operations matter, use `deque` from the `Collections` package
-> 3. Heap / Priority Queue
->     * Requires the Apple `Collections` package which is not apart of the standard library
-> 4. Optionals
->     * Values that can be `nil` need extra handling
->     * Most prevalent in graph or tree problems
+> 1. [Strings](#strings)
+>    * They are encoded in Unicode and integer subscripting is not available
+>    * Easy workaround is to convert strings with `Array(nameOfString)`
+> 2. [Stacks](#stacks) / [Queues](#queues)
+>    * Array can be used as a stack for O(1) insert and removal
+>    * Removing elements from the front of an array is O(n)
+>    * If the time complexity of queue operations matter, use `deque` from the `Collections` package
+> 3. [Heaps](#heaps) / Priority Queue
+>    * Requires the Apple `Collections` package which is not apart of the standard library
+> 4. [Optionals](#optionals)
+>    * Values that can be `nil` need extra handling
+>    * Most prevalent in graph or tree problems
+
+## Table of Contents
+
+- [Variables](#variables)
+- [Operators](#operators)
+- [Math](#math)
+- [Control Flow](#control-flow)
+  + [Conditionals](#conditionals)
+  + [Loops](#loops)
+- [Strings](#strings)
+  - [Subscripting](#subscripting)
+  - [Substrings](#substrings)
+- [Tuples](#tuples)
+- [Functions](#functions)
+- [Collections](#collections)
+  - [Arrays](#arrays)
+  - [2D Arrays](#2d-arrays)
+  - [Stacks](#stacks)
+  - [Queues](#queues)
+  - [Sets](#sets)
+  - [Dictionaries](#dictionaries)
+- [Deque](#deque)
+- [Heaps](#heaps)
+- [Optionals](#optionals)
+- [Classes](#classes)
+- [Closures](#closures)
+
+  
 
 ## Variables
 
@@ -89,7 +117,7 @@ let hexadecimalInteger = 0xf    // 15 in hexadecimal notation
 
 ## Operators
 
-### Arithmetic
+Arithmetic.
 
 ```swift
 1 + 1       // is 2
@@ -98,8 +126,6 @@ let hexadecimalInteger = 0xf    // 15 in hexadecimal notation
 7 / 2       // is 3
 7 / 2.0     // is 3.5
 ```
-
-### Remainder
 
 In Swift the `%` operator is actually a remainder operator and doesn't perform true modulo operations.
 
@@ -118,7 +144,7 @@ func mod(_ a: Int, _ n: Int) -> Int {
 }
 ```
 
-### Comparison Operators
+Comparison operators.
 
 ```swift
 ==  // equal
@@ -129,7 +155,7 @@ func mod(_ a: Int, _ n: Int) -> Int {
 <=  // less than or equal to
 ```
 
-### Logical Operators
+Logical operators.
 
 ```swift
 &&  // logical AND
@@ -137,14 +163,12 @@ func mod(_ a: Int, _ n: Int) -> Int {
 !   // logical NOT
 ```
 
-### Range Operators
+Range operators.
 
 ```swift
 a...b // closed range from a to b inclusive
 a..<b // half-open range is from a to b exclusive (does not include b)
 ```
-
-### Ternary Operator
 
 The ternary is shorthand for `if a then b else c` in the form of `a ? b : c` so the if-block below and the ternary statement are equivalent and both of them output `true`
 
@@ -164,8 +188,6 @@ bestLanguage == "Swift" ? print(true) : print(false)
 // true
 ```
 
-### Nil-Coalescing Operator
-
 The nil-coalescing operator will unwrap `a` if it contains a value, else it will return a default value `b`
 
 ```swift
@@ -176,8 +198,6 @@ stringVariable ?? "" // will return an empty-string if stringVariable is nil
 
 
 ## Math
-
-### Floor and Ceiling
 
 Note that `Foundation` import is required for `floor` and `ceil` functions.
 
@@ -191,18 +211,14 @@ var anotherNumber = 10.2
 ceil(anotherNumber) // 11.0
 ```
 
-### Square Root
-
-Use `variable.squareRoot()` with `Float` or `Double` types
+For square root use `variable.squareRoot()` with `Float` or `Double` types
 
 ```swift
 var someNumber = 121.0
 someNumber.squareRoot() // 11.0
 ```
 
-### Powers
-
-You can use the exponentiation operator `**` 
+For powers you can use the exponentiation operator `**` 
 
 ```swift
 3 ** 3 // 27 
@@ -218,11 +234,7 @@ let exponent = 3.0
 pow(base, exponent) // 27
 ```
 
-
-
-### Min and Max
-
-So that you don't have to type things like `if a < b { min = a } else { min = b }`...
+There is min/max so that you don't have to type things like `if a < b { min = a } else { min = b }`...
 
 ```swift
 let a = 3
@@ -232,8 +244,6 @@ min(a, b) // 3
 max(a, b) // 27
 ```
 
-### Int.min and Int.max
-
 Integers can overflow in Swift, unlike in Python, so be careful.
 
 ```swift
@@ -241,9 +251,7 @@ Int.min // -9223372036854775808
 Int.max // 9223372036854775807
 ```
 
-### Overflow Operators
-
-Use `&+` `&-` and `&*` to wrap around and avoid a runtime error.
+Use `&+` `&-` and `&*` to wrap around and avoid an overflow.
 
 ```swift
 var bigNumber = Int.max
@@ -252,7 +260,7 @@ bigNumber + 1  // error: overflow
 bigNumber &+ 1 // wraps around to Int.min
 ```
 
-### Logarithms
+Logarithms.
 
 ```swift
 import Foundation
@@ -368,9 +376,185 @@ repeat {
 print("Is that the red or the white?")
 ```
 
-## Arrays
+## Strings
 
-### Initializing
+### Subscripting
+
+Strings in Swift are encoded in Unicode such that each `Character` is an extended grapheme cluster. Since a single Unicode character can be represented by one or more bytes (i.e. emojis or accented characters), you cannot subscript a string using an integer index.
+
+https://docs.swift.org/swift-book/documentation/the-swift-programming-language/stringsandcharacters
+
+```swift
+var apple = "Macintosh"
+print(apple[2]) // error
+```
+
+There is a way to subscript strings with the `index` method using `(before: after: offsetBy:)`, but it is simpler to convert it to an array for DSA problems and save the `index` method for working with actual Unicode.
+
+```swift
+var raspberry = "Pi"
+var charArray = Array(raspberry)
+print(charArray[0]) // "P"
+```
+
+### Substrings
+
+You can use range operators to create substrings where `...` can get you everything until the beginning or end of the array and the half-open range operator `..<` will exclude the upper bound.
+
+```swift
+var greeting = "Happy New Year!"
+var greetingArray = Array(greeting)
+let happy = greetingArray[...5]
+let new = greetingArray[6..<9]
+let year = greetingArray[10...]
+print(String(happy)) // "Happy"
+print(String(new))   // "New"
+print(String(year))  // "Year!"
+```
+
+Strings can be concatenated with the `+=` compound operator or you can use the `joined` method to concatenate multiple strings together.
+
+```swift
+// concatenating with +=
+var halfProgram = "Hello "
+halfProgram += "World!"
+
+var wholeProgram = halfProgram
+print(wholeProgram) // "Hello World!"
+
+// joined method
+var stringList: [String] = ["Red", "White", "Blue"]
+let murica = stringList.joined(separator: " ")
+print(murica) // "Red White Blue"
+```
+
+Here are some examples of common string and integer conversions.
+
+```swift
+// converting numeric strings to integers
+let goodPrime: Int = Int("31") ?? 0
+let meaningOfLife: Int = Int("42") ?? 0
+let sheldon: Int = goodPrime + meaningOfLife
+print(sheldon) // 73
+
+// converting integers to numeric strings
+let deja = 123
+let vu = 123
+print("\(deja)\(vu)") // "123123"
+
+// getting the ASCII value of a character
+let alphaOne = "A"
+let alphaTwo = "B"
+
+if let asciiValue1 = alphaOne.utf8.first {
+    print(asciiValue1) // 65
+}
+
+if let asciiValue2 = alphaTwo.utf8.first {
+    print(asciiValue2) // 66
+}
+```
+
+## Tuples
+
+Since Swift does not support multiple return values, tuples are probably most useful in those situations. Tuples can be created with any permutation of types like (Int, Bool, Int, String), or whatever you want.
+
+```swift
+// creating tuples
+let httpStatus = (503, "Service Unavailable")
+
+// they can be named
+let httpStatusNamed = (statusCode: 503, statusMessage: "Service Unavailable")
+
+// or decomposed into variables
+let (statusCode, statusMessage) = httpStatus
+print("Response status code returned: \(statusCode)") // 503
+
+// or accessed by their integer index
+print("The status message was: \(httpStatus.1)") // "Service Unavailable"
+
+// and you can use a '_' to discard values you don't want
+let (code, _) = httpStatus
+```
+
+## Functions
+
+Functions don't need parameters or return values.
+
+```swift
+func basic() {
+  	print("Much basic")
+}
+basic() // "Much basic"
+```
+
+Swift uses argument labels which are `greeting` and `name` in the following snippet.
+
+```swift
+func greeting(greeting: String, name: String) -> String {
+    return "\(greeting) \(name)!"
+}
+print(greeting(greeting: "Bonjour", name: "Bob")) // "Bonjour Bob!"
+```
+
+You probably want to omit argument labels for simpler function calling.
+
+```swift
+func greeting(_ greeting: String, _ name: String) -> String {
+    return "\(greeting) \(name)!"
+}
+print(greeting("Ciao", "Alice")) // "Ciao Alice!"
+```
+
+Tuples are how Swift functions can support multiple return values.
+
+```swift
+func minMax(_ array: [Int]) -> (min: Int, max: Int) {
+    var currentMin = array[0]
+    var currentMax = array[0]
+    for value in array[1..<array.count] {
+        if value < currentMin {
+            currentMin = value
+        } else if value > currentMax {
+            currentMax = value
+        }
+    }
+    return (currentMin, currentMax)
+}
+
+let arr: [Int] = [1, 2, 3, 4, 5]
+let (min, max) = minMax(arr)
+print("The minimum value in \(arr) is \(min) and the max is \(max).")
+```
+
+In Swift, parameters use value semantics by default. To simulate pass-by-reference behavior for value types, you can use the `inout` keyword. This allows a function to modify the original variable by copying its value into the function, modifying it, and then copying the modified value back to the original variable when the function returns. This is useful when you need to modify a data structure in place without returning a new value.
+
+```swift
+/// removeElement removes all elements in the original array that are equivalent to `val` and returns the total number of elements removed
+func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
+    var i = nums.count - 1
+    while i >= 0 {
+        if nums[i] == val {
+            nums.remove(at: i)
+        }
+        i -= 1
+    }    
+    return nums.count
+}
+
+// note that the list is mutable
+var someList = [3, 2, 2, 3]
+
+// & is needed when modifying the original variable
+print(removeElement(&someList, 2)) // [3, 3]
+```
+
+> [!Tip] 
+> Swift allows nested functions which are handy for helper/utility/accumulator functions.
+
+## Collections
+
+### Arrays
 
 Arrays are Swift's lists and can be stored in mutable variables or immutable constants.
 
@@ -394,7 +578,7 @@ let numList: Int = [1, 2, 3]
 print(numList) // [1, 2, 3]
 ```
 
-### Array Operations
+Here are some core array operations:
 
 ```swift
 // append
@@ -434,8 +618,6 @@ print(arr[4])    // 5
 print(arr[5])    // error: out of range
 ```
 
-### Sorting
-
 Arrays can be sorted in place where you mutate the original data structure using the `sort` method.
 
 ```swift
@@ -461,9 +643,9 @@ print(descendingArr) // [5, 4, 3, 2, 1]
 print(arr)           // [5, 1, 3, 4, 2]
 ```
 
-## 2D Arrays
+### 2D Arrays
 
-### Initializing
+You can initialize an 2D array literal as follows.
 
 ```swift
 var matrix: [[Int]] = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -479,7 +661,7 @@ var matrix = [[Int]](repeating: [Int](repeating: 0, count: columns), count: rows
 print(matrix) // [[0, 0, 0], [0, 0, 0]]
 ```
 
-### Accessing and Modifying Elements
+Here is how you access and modify elements.
 
 ```swift
 var matrix: [[Int]] = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -504,89 +686,6 @@ for i in 0..<matrix.count {
 }
 ```
 
-## Strings
-
-### Subscripting
-
-Strings in Swift are encoded in Unicode such that each `Character` is an extended grapheme cluster. Since a single Unicode character can be represented by one or more bytes (i.e. emojis or accented characters), you cannot subscript a string using an integer index.
-
-https://docs.swift.org/swift-book/documentation/the-swift-programming-language/stringsandcharacters
-
-```swift
-var apple = "Macintosh"
-print(apple[2]) // error
-```
-
-There is a way to subscript strings with the `index` method using `(before: after: offsetBy:)`, but it is simpler to convert it to an array for DSA problems and save the `index` method for working with actual Unicode.
-
-```swift
-var raspberry = "Pi"
-var charArray = Array(raspberry)
-print(charArray[0]) // "P"
-```
-
-### Substrings
-
-You can use range operators to create substrings where `...` can get you everything until the beginning or end of the array and the half-open range operator `..<` will exclude the upper bound.
-
-```swift
-var greeting = "Happy New Year!"
-var greetingArray = Array(greeting)
-let happy = greetingArray[...5]
-let new = greetingArray[6..<9]
-let year = greetingArray[10...]
-print(String(happy)) // "Happy"
-print(String(new))   // "New"
-print(String(year))  // "Year!"
-```
-
-### Concatenation
-
-Strings can be concatenated with the `+=` compound operator or you can use the `joined` method to concatenate multiple strings together.
-
-```swift
-// concatenating with +=
-var halfProgram = "Hello "
-halfProgram += "World!"
-
-var wholeProgram = halfProgram
-print(wholeProgram) // "Hello World!"
-
-// joined method
-var stringList: [String] = ["Red", "White", "Blue"]
-let murica = stringList.joined(separator: " ")
-print(murica) // "Red White Blue"
-```
-
-### Conversions
-
-```swift
-// converting numeric strings to integers
-let goodPrime: Int = Int("31") ?? 0
-let meaningOfLife: Int = Int("42") ?? 0
-let sheldon: Int = goodPrime + meaningOfLife
-print(sheldon) // 73
-
-// converting integers to numeric strings
-let deja = 123
-let vu = 123
-print("\(deja)\(vu)") // "123123"
-
-// getting the ASCII value of a character
-let alphaOne = "A"
-let alphaTwo = "B"
-
-if let asciiValue1 = alphaOne.utf8.first {
-    print(asciiValue1) // 65
-}
-
-if let asciiValue2 = alphaTwo.utf8.first {
-    print(asciiValue2) // 66
-}
-```
-
-## Stacks / Queues
-
 ### Stacks
 
 You can use an array as a stack with `O(1)` insert and `O(1)` removal.
@@ -610,7 +709,7 @@ print(stack.isEmpty)          // false
 print(stack)                  // [1, 2]
 ```
 
-### Array Queue
+### Queues
 
 For queues you can also use an array, but be aware of the time complexity difference. Dequeueing from the front of the queue is an `O(n)` operation because all elements have to shift to the left.
 
@@ -632,19 +731,7 @@ print(queue.removeFirst())   // 1
 print(queue)                 // [2, 3]
 ```
 
-### Deque
-
-The `deque`, or double ended queue, data structure can be imported from the `Collections` package. This is the `apple/swift-collections` package on the Swift Package Index and although officially provided by Apple, it is not apart of the standard library in Swift. LeetCode includes this package as well as the `Algorithms` and `Numerics` packages when solving problems on their site. If you are using a platform that does not include the `Collections` package, keep the time complexity in mind of using an array.
-
-```swift
-import Collections
-
-var deque: Deque<Int> = [1, 2, 3]
-print(deque.prepend(0)) // [0, 1, 2, 3]
-print(deque.append(0))  // [0, 1, 2, 3, 0]
-```
-
-## Sets
+### Sets
 
 ```swift
 var musicGenres: Set<String> = ["Classical", "Jazz", "Electronic"]
@@ -662,8 +749,6 @@ musicGenres = []
 musicGenres.count // 0
 ```
 
-### Iterating
-
 Sets in Swift are unordered, so if you need ordering you can use the `sorted` method.
 
 ```swift
@@ -677,7 +762,7 @@ for genre in musicGenres.sorted() {
 }
 ```
 
-### Set Operations
+Here are some core set operations:
 
 ```swift
 let oddDigits: Set = [1, 3, 5, 7, 9]
@@ -699,8 +784,6 @@ oddDigits.subtracting(singleDigitPrimeNumbers).sorted() // [1, 9]
 oddDigits.symmetricDifference(singleDigitPrimeNumbers).sorted() // [1, 2, 9]
 ```
 
-### Membership and Equality
-
 In additional to fundamental set operations, you can check set equality with `==` and compute subset, superset, and disjoint as follows:
 
 ```swift
@@ -714,8 +797,6 @@ houseAnimals.isSubset(of: farmAnimals)    // true
 farmAnimals.isSuperset(of: houseAnimals)  // true
 farmAnimals.isDisjoint(with: cityAnimals) // true
 ```
-
-### Conversion
 
 Here's how you can convert a set to a list or a list to a set:
 
@@ -733,9 +814,7 @@ print(cityAnimalsList) // ["Bird", "Mouse", "Bird", "Mouse", "Rat"]
 cityAnimals = Set(cityAnimalsList) // ["Bird, "Mouse", "Rat"]
 ```
 
-## Dictionaries
-
-### Basic Operations
+### Dictionaries
 
 ```swift
 // declare empty dictionary
@@ -765,8 +844,6 @@ let whySoLow = mentions["Gimli"]
 mentions["Gimli"] = 9999
 ```
 
-### Iterating 
-
 Note that dictionaries do not have a defined ordering so use the `sorted` method if you need to iterate in a specific order.
 
 ```swift
@@ -788,26 +865,16 @@ for mentions in mentions.values.sorted() {
 }
 ```
 
-## Tuples
+## Deque
 
-Since Swift does not support multiple return values, tuples are probably most useful in those situations. Tuples can be created with any permutation of types like (Int, Bool, Int, String), or whatever you want.
+The `deque`, or double ended queue, data structure can be imported from the `Collections` package. This is the `apple/swift-collections` package on the Swift Package Index and although officially provided by Apple, it is not apart of the standard library in Swift. LeetCode includes this package as well as the `Algorithms` and `Numerics` packages when solving problems on their site. If you are using a platform that does not include the `Collections` package, keep the time complexity in mind of using an array.
 
 ```swift
-// creating tuples
-let httpStatus = (503, "Service Unavailable")
+import Collections
 
-// they can be named
-let httpStatusNamed = (statusCode: 503, statusMessage: "Service Unavailable")
-
-// or decomposed into variables
-let (statusCode, statusMessage) = httpStatus
-print("Response status code returned: \(statusCode)") // 503
-
-// or accessed by their integer index
-print("The status message was: \(httpStatus.1)") // "Service Unavailable"
-
-// and you can use a '_' to discard values you don't want
-let (code, _) = httpStatus
+var deque: Deque<Int> = [1, 2, 3]
+print(deque.prepend(0)) // [0, 1, 2, 3]
+print(deque.append(0))  // [0, 1, 2, 3, 0]
 ```
 
 ## Heaps
@@ -842,139 +909,7 @@ print(heap.unordered)
 // [1, 2, 3]
 ```
 
-## Functions
-
-The first thing of note with functions in Swift is that a tuple can be used to return multiple values.
-
-```swift
-func minMax(array: [Int]) -> (min: Int, max: Int) {
-    var currentMin = array[0]
-    var currentMax = array[0]
-    for value in array[1..<array.count] {
-        if value < currentMin {
-            currentMin = value
-        } else if value > currentMax {
-            currentMax = value
-        }
-    }
-    return (currentMin, currentMax)
-}
-
-let arr: [Int] = [1, 2, 3, 4, 5]
-let (min, max) = minMax(array: arr)
-print("The minimum value in \(arr) is \(min) and the max is \(max).")
-```
-
-Next thing of note is you probably want to omit argument labels for simpler function calling.
-
-```swift
-// note the `_` before the array parameter
-func minMax(_ array: [Int]) -> (min: Int, max: Int) {
-	...
-}
-
-// now the function can be called without the argument label
-...
-let (min, max) = minMax(arr)
-```
-
-In Swift, parameters use value semantics by default. To simulate pass-by-reference behavior for value types, you can use the `inout` keyword. This allows a function to modify the original variable by copying its value into the function, modifying it, and then copying the modified value back to the original variable when the function returns. This is useful when you need to modify a data structure in place without returning a new value.
-
-```swift
-/// removeElement removes all elements in the original array that are equivalent to `val` and returns the total number of elements removed
-func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
-    var i = nums.count - 1
-    while i >= 0 {
-        if nums[i] == val {
-            nums.remove(at: i)
-        }
-        i -= 1
-    }    
-    return nums.count
-}
-
-// note that the list is mutable
-var someList = [3, 2, 2, 3]
-
-// & is needed when modifying the original variable
-print(removeElement(&someList, 2)) // [3, 3]
-```
-> [!Tip]
-> Swift allows nested functions which are handy for helper/utility/accumulator functions.
-
-## Closures
-
-Closures are similar to lambdas or anonymous functions in other languages. I included it in this guide because I find `map`, `filter`, and `reduce` handy. They are simply blocks of functionality that can be passed around or assigned to variables or constants.
-
-### Form
-
-```swift
-{ (<#parameters#>) -> <#return type#> in
-   <#statements#>
-}
-```
-
-In its simplest form, we can add functionality to this constant and call it like a function.
-
-```swift
-let sayHi = {
-    print("Hi!")
-}
-
-sayHi() // "Hi!"
-```
-
-To add parameters and a return type we need to write them before the `in` keyword, and add any statements after in the closure body.
-
-```swift
-let sayHi = { (name: String) -> String in
-    "Hi \(name)!"
-}
-sayHi("Alice") // "Hi Alice!"
-```
-
-Swift's closures can be written out in a verbose or terse way. This is a an example from the Swift docs where several closures are equivalent.
-
-```swift
-reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in
-    return s1 > s2
-})
-
-// equivalent
-reversedNames = names.sorted(by: { s1, s2 in return s1 > s2 } )
-
-// equivalent
-reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
-
-// equivalent
-reversedNames = names.sorted(by: { $0 > $1 } )
-```
-
-### Map, Filter, Reduce
-
-```swift
-let numbers = [1, 2, 3, 4, 5]
-let squares = numbers.map { $0 * $0 }       // [1, 4, 9, 16, 25]
-let evens = numbers.filter { $0 % 2 == 0 }  // [2, 4]
-
-// initial value is 0
-// $0 is the current accumulator value
-// $1 is the current element
-let sum = numbers.reduce(0) { $0 + $1 }     // 15
-```
-
-Here is an example of function chaining where we combine the `map`, `filter`, and `reduce` functions into a single operation.
-
-```swift
-let numbers = [1, 2, 3, 4, 5]
-let res = numbers
-    .map { $0 * $0 }
-    .filter { $0 % 2 == 0 }
-    .reduce(0) { $0 + $1 }
-print(res) // 20
-```
-
-## Optionals and Classes
+## Optionals
 
 Optionals are types that can either contain a value, or `nil`, the absence of a value. The purpose of having this type is for null safety and to prevent Null Pointer Exceptions. The term `nil` comes from Objective-C and is conceptually the same as `null`. Since Swift is fully interoperable with Objective-C and many Apple platform APIs are written in Objective-C, the choice for `nil` in the Swift language makes sense.
 
@@ -1001,6 +936,7 @@ enum Optional<Wrapped> {
 
 > [!Warning]
 > If you want to unwrap an `optional` you can use the `!` operator to force unwrap, but be careful, if you accidentally unwrap an `optional` that contains `nil` your program will crash.
+
 ```swift
 var userName: String? = nil
 print(userName!) // error
@@ -1016,6 +952,8 @@ if let name = userName {
     print(name) // does not execute
 }
 ```
+
+## Classes
 
 Let's build a linked list class to see a more practical example of `optional` in use because `nil` is used in common linked list implementations to indicate where a list ends.
 
@@ -1083,5 +1021,74 @@ let reversedHead = reverseList(node1)
 printList(reversedHead) // 3 -> 2 -> 1 -> nil
 ```
 
+## Closures
 
+Closures are similar to lambdas or anonymous functions in other languages. I included it in this guide because I find `map`, `filter`, and `reduce` handy. They are simply blocks of functionality that can be passed around or assigned to variables or constants.
 
+```swift
+{ (<#parameters#>) -> <#return type#> in
+   <#statements#>
+}
+```
+
+In its simplest form, we can add functionality to this constant and call it like a function.
+
+```swift
+let sayHi = {
+    print("Hi!")
+}
+
+sayHi() // "Hi!"
+```
+
+To add parameters and a return type we need to write them before the `in` keyword, and add any statements after in the closure body.
+
+```swift
+let sayHi = { (name: String) -> String in
+    "Hi \(name)!"
+}
+sayHi("Alice") // "Hi Alice!"
+```
+
+Swift's closures can be written out in a verbose or terse way. This is a an example from the Swift docs where several closures are equivalent.
+
+```swift
+reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in
+    return s1 > s2
+})
+
+// equivalent
+reversedNames = names.sorted(by: { s1, s2 in return s1 > s2 } )
+
+// equivalent
+reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
+
+// equivalent
+reversedNames = names.sorted(by: { $0 > $1 } )
+```
+
+`map`, `filter`, and `reduce` can save you a lot of time as opposed to writing a for-loop.
+
+```swift
+let numbers = [1, 2, 3, 4, 5]
+let squares = numbers.map { $0 * $0 }       // [1, 4, 9, 16, 25]
+let evens = numbers.filter { $0 % 2 == 0 }  // [2, 4]
+
+// initial value is 0
+// $0 is the current accumulator value
+// $1 is the current element
+let sum = numbers.reduce(0) { $0 + $1 }     // 15
+```
+
+Here is an example of function chaining where we combine the `map`, `filter`, and `reduce` functions into a single operation.
+
+```swift
+let numbers = [1, 2, 3, 4, 5]
+let res = numbers
+    .map { $0 * $0 }
+    .filter { $0 % 2 == 0 }
+    .reduce(0) { $0 + $1 }
+print(res) // 20
+```
+
+## 
