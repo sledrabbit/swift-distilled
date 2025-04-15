@@ -152,9 +152,9 @@ The ternary is shorthand for `if a then b else c` in the form of `a ? b : c` so 
 let bestLanguage = "Swift"
 
 if bestLanguage == "Swift" {
-  print(true)
+    print(true)
 } else {
-	print(false)
+    print(false)
 }
 
 // ternary
@@ -278,11 +278,11 @@ log(someNumber) / log(10.0) // 0.903..
 let temperature = 39
 
 if temperature > 45 {
-  print("Summer Tires")
+    print("Summer Tires")
 } else if temperature > 32 {
-  print("All-Season Tires")
+    print("All-Season Tires")
 } else {
-  print("Winter Tires")
+    print("Winter Tires")
 }
 ```
 
@@ -302,14 +302,14 @@ Here are Range Operators being used in For-in loops:
 
 ```swift
 for i in 0...2 {
-	print(i)
+    print(i)
 }
 // 0
 // 1
 // 2
 
 for i in 0..<2 {
-  print(i)
+    print(i)
 }
 // 0
 // 1
@@ -322,7 +322,7 @@ let start = 2
 let finish = 10
 
 for i in stride(from: start, to: finish, by: 2) {
-  print(i)
+    print(i)
 }
 // 2
 // 4
@@ -340,8 +340,8 @@ while <#condition#> {
 var countdown = 10
 
 while countdown > 0 {
-  print(countdown)
-  countdown -= 1
+    print(countdown)
+    countdown -= 1
 }
 print("Happy New Year!")
 ```
@@ -357,11 +357,11 @@ let password = "New England clam chowder"
 var attempt: String
 
 repeat {
-  print("What's the password?")
-	attempt = readLine() ?? ""
-  
-  if attempt != password {
-    print("Try again")
+    print("What's the password?")
+    attempt = readLine() ?? ""
+    
+    if attempt != password {
+        print("Try again")
   }
 } while attempt != password
 
@@ -426,7 +426,7 @@ var arr = [Int]()
 print(arr.count) // 0
 
 for i in 1...5 {
-  arr.append(i)
+    arr.append(i)
 }
 print(arr.count) // 5
 print(arr[0])    // 1
@@ -498,9 +498,9 @@ print(matrix) // [[1, 2, 3], [4, 4, 4], [7, 8, 9], [0, 0, 0]]
 
 // iterate over 2D array
 for i in 0..<matrix.count {
-	for j in 0..<matrix[i].count {
-      print(matrix[i][j])
-  }
+    for j in 0..<matrix[i].count {
+        print(matrix[i][j])
+    }
 }
 ```
 
@@ -918,7 +918,7 @@ In its simplest form, we can add functionality to this constant and call it like
 
 ```swift
 let sayHi = {
-  	print("Hi!")
+    print("Hi!")
 }
 
 sayHi() // "Hi!"
@@ -968,9 +968,9 @@ Here is an example of function chaining where we combine the `map`, `filter`, an
 ```swift
 let numbers = [1, 2, 3, 4, 5]
 let res = numbers
-					.map { $0 * $0 }
-					.filter { $0 % 2 == 0 }
-					.reduce(0) { $0 + $1 } 
+    .map { $0 * $0 }
+    .filter { $0 % 2 == 0 }
+    .reduce(0) { $0 + $1 }
 print(res) // 20
 ```
 
@@ -1013,7 +1013,7 @@ var userName: String? = nil
 print(userName ?? "") // ""
 
 if let name = userName {
-  print(name) // does not execute
+    print(name) // does not execute
 }
 ```
 
